@@ -4,7 +4,7 @@ import {View,Text,ScrollView,Image,FlatList,ActivityIndicator,LayoutAnimation,
 import {List, H1, H3,} from 'native-base';
 import {connect} from 'react-redux';
 import MenuItem from './MenuItem';
-import {onMenuSelect} from '../../actions/Index';
+import {onMenuSelect,saveLocation} from '../../actions/Index';
 import {anonymousMenuList} from '../../services/menu.services'
 import { COLOR_PRIMARY } from '../../Theme/Colors';
 import HeaderApp from '../../components/Common/Header';
@@ -21,6 +21,10 @@ class Menu extends Component{
         count:0
     };
     componentDidMount(){
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.props.saveLocation(position.coords.latitude,position.coords.longitude)
+            });
         if(this.props.name !== 'menuList'){
             if(this.props.selectedCategory){
                 this.setState({
@@ -31,7 +35,7 @@ class Menu extends Component{
         }else{
             this.makeRequest();
         }
-            
+        
         
     }
     componentWillReceiveProps(props){
@@ -42,7 +46,9 @@ class Menu extends Component{
                 },()=>{this.makeRequest()});
             }
         }
-
+        if(this.props.lat !== props.lat  || this.props.long !== props.long ){
+            this.makeRequest();
+        }
         if(props.selectedMenu.iD !== this.props.selectedMenu.iD){
             Actions.menuDetail();
         }
@@ -91,6 +97,16 @@ class Menu extends Component{
         })
     }
 
+    renderHeader=()=>{
+        return (
+            <View
+              style={{
+                paddingTop: 20
+              }}
+            >
+            </View>
+          );
+    }
     renderFooter = () => {
         if (!this.state.loading) return <View style={{paddingVertical: 20,marginBottom:10}}/>
     
@@ -159,9 +175,9 @@ class Menu extends Component{
             />
             {!this.state.loading && this.state.records.length===0 ?  <View style={{flex:1,justifyContent:'center',alignItems:'center'}}><Text>No Record Found!</Text></View>:
             <FlatList
-                style={{paddingTop:20}}
                 data={this.state.records}
                 renderItem={({ item }) => (<MenuItem key={item.iD} item={item} handlePress={this.handlePress}/>)}
+                ListHeaderComponent={this.renderHeader}
                 ListFooterComponent={this.renderFooter}
                 onEndReached={this.handleLoadMore}
                 onEndReachedThreshold={1}
@@ -180,4 +196,4 @@ const mapStateToProps=state=>{
         selectedMenu: state.listing.selectedMenu
     }
 }
-export default connect(mapStateToProps,{onMenuSelect})(Menu);
+export default connect(mapStateToProps,{onMenuSelect,saveLocation})(Menu);

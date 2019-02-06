@@ -1,0 +1,9 @@
+export const MEMBER_EXISTS ="member_exists";
+export const LOAD_START ="load_start";
+export const FAILURE_SUCCESS = "failure_success";
+export const EXISTANCE_FAILURE = "existance_failure";
+export const EXISTANCE_SUCCESS = "existance_success";
+export const SAVE_LOCATION = "save_location";
+export const ON_CATEGORY_SELECT = "on_category_select";
+export const ON_MENU_SELECT = "on_menu_select";
+export const ITEM_DETAIL = "item_detail";

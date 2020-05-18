@@ -1,5 +1,4 @@
-# Ecommerce MERN
-
+# Maskat Listing
 This project is a basic restaurant listing application based on the React Native. 
 
 ## Getting Started
